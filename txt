@@ -1,0 +1,61 @@
+learnease-lms/
+├── client/
+│   ├── public/
+│   │   └── index.html
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── CourseCard.js
+│   │   │   ├── Navbar.js
+│   │   │   ├── Footer.js
+│   │   │   ├── HeroSection.js
+│   │   │   ├── FeaturedCourses.js
+│   │   │   ├── WhyChooseUs.js
+│   │   │   ├── CoursePlayer.js
+│   │   │   ├── LearningDashboard.js
+│   │   │   ├── InstructorDashboard.js
+│   │   │   └── Testimonials.js
+│   │   ├── pages/
+│   │   │   ├── HomePage.js
+│   │   │   ├── CourseDetailPage.js
+│   │   │   ├── LoginPage.js
+│   │   │   ├── RegisterPage.js
+│   │   │   ├── InstructorPage.js
+│   │   │   └── StudentDashboardPage.js
+│   │   ├── App.js
+│   │   ├── index.js
+│   │   ├── api/
+│   │   │   └── courses.js
+│   │   │   └── auth.js
+│   │   ├── context/
+│   │   │   └── AuthContext.js
+│   │   ├── styles/
+│   │   │   └── index.css (for TailwindCSS imports)
+│   │   └── utils/
+│   │       └── auth.js
+│   ├── package.json
+│   └── README.md
+├── server/
+│   ├── config/
+│   │   └── db.js
+│   ├── controllers/
+│   │   ├── authController.js
+│   │   ├── courseController.js
+│   │   └── userController.js
+│   ├── middleware/
+│   │   ├── authMiddleware.js
+│   │   └── errorHandler.js
+│   ├── models/
+│   │   ├── User.js
+│   │   ├── Course.js
+│   │   └── Enrollment.js
+│   ├── routes/
+│   │   ├── authRoutes.js
+│   │   ├── courseRoutes.js
+│   │   └── userRoutes.js
+│   ├── uploads/ (for course thumbnails/videos)
+│   ├── .env
+│   ├── server.js
+│   ├── package.json
+│   └── README.md
+├── .gitignore
+└── README.md
