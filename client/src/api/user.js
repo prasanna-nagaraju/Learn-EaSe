@@ -36,11 +36,24 @@
         return response.data;
     };
 
+    
+    const createPaymentIntent = async (courseId) => {
+    const res = await axios.post('http://localhost:5000/api/payments/create-payment-intent', { courseId },getConfig());
+    return res.data;
+    };
+
+    const confirmEnrollment = async (courseId, paymentIntentId) => {
+    const res = await axios.post('http://localhost:5000/api/payments/confirm-enrollment', { courseId, paymentIntentId }, getConfig());
+    return res.data;
+    };
+
     const userService = {
         enrollInCourse,
         getLearningDashboard,
         updateLessonProgress,
         getInstructorDashboard,
+        createPaymentIntent,
+        confirmEnrollment
     };
 
     export default userService;

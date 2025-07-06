@@ -6,6 +6,7 @@
     const courseRoutes = require('./routes/courseRoutes');
     const userRoutes = require('./routes/userRoutes');
     const { notFound, errorHandler } = require('./middleware/errorHandler');
+    const paymentRoutes = require('./routes/payments');
 
     dotenv.config();
     connectDB();
@@ -18,11 +19,13 @@
     // Routes
     app.use('/api/auth', authRoutes);
     app.use('/api/courses', courseRoutes);
-    app.use('/api/users', userRoutes);
+    app.use('/api/users', userRoutes);   
+    app.use('/api/payments', paymentRoutes);
 
     // Error Handling Middleware
     app.use(notFound);
     app.use(errorHandler);
+
 
     const PORT = process.env.PORT || 5000;
 
