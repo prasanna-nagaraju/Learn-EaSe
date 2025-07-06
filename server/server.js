@@ -1,14 +1,14 @@
+    require('dotenv').config();
     const express = require('express');
-    const dotenv = require('dotenv');
     const cors = require('cors');
     const connectDB = require('./config/db');
     const authRoutes = require('./routes/authRoutes');
     const courseRoutes = require('./routes/courseRoutes');
     const userRoutes = require('./routes/userRoutes');
-    const { notFound, errorHandler } = require('./middleware/errorHandler');
     const paymentRoutes = require('./routes/payments');
+    const { notFound, errorHandler } = require('./middleware/errorHandler');
 
-    dotenv.config();
+
     connectDB();
 
     const app = express();
