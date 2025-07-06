@@ -7,12 +7,18 @@
     import Footer from '../components/Footer';
     import { loadStripe } from '@stripe/stripe-js';
     import '@fortawesome/fontawesome-free/css/all.min.css';
+    import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+
+
 
     // Make sure to call `loadStripe` outside of a component’s render to avoid
-    // recreating the Stripe object on every render.
-    const stripePromise = loadStripe('pk_test_YOUR_STRIPE_PUBLISHABLE_KEY_HERE'); // Replace with your publishable key
+    // recreating the Stripe object on every render
+    // 
+    const stripePromise = loadStripe('pk_test_51RgtX4R7oZsjTrQPu7TMkXp0jIWiDJOxTVDp8VnSkCYzNSBjwX4OH1ZiizSL1ss1dm1yUEwDYPuVA7pc0yVSJRhI00e5KyG7hG'); // your publishable key
 
     const CourseDetailPage = () => {
+        const stripe = useStripe();
+        const elements = useElements();
         const { id } = useParams();
         const navigate = useNavigate();
         const { user } = useAuth();
@@ -49,36 +55,61 @@
         }, [id, user]);
 
         const handleEnroll = async () => {
-            if (!user) {
-                alert('Please sign in to enroll in a course.');
-                navigate('/login');
-                return;
-            }
-            if (user.role !== 'student') {
-                alert('Only students can enroll in courses.');
-                return;
-            }
-            if (isEnrolled) {
-                alert('You are already enrolled in this course!');
-                return;
+        if (!user) {
+            alert('Please sign in to enroll in a course.');
+            navigate('/login');
+            return;
+        }
+        if (user.role !== 'student') {
+            alert('Only students can enroll in courses.');
+            return;
+        }
+        if (isEnrolled) {
+            alert('You are already enrolled in this course!');
+            return;
+        }
+
+        if (!stripe || !elements) {
+            alert('Stripe is not loaded yet. Please wait.');
+            return;
+        }
+
+        try {
+            // 1. Create PaymentIntent from backend
+            const { clientSecret } = await userService.createPaymentIntent(course._id);
+
+            // 2. Confirm payment on client
+            const cardElement = elements.getElement(CardElement);
+
+            const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
+            payment_method: {
+                card: cardElement,
+            },
+            });
+
+            if (error) {
+            console.error(error);
+            alert(error.message);
+            return;
             }
 
-            try {
-                const stripe = await stripePromise;
-                // In a real app, you'd create a PaymentIntent on your backend
-                // and then confirm it on the client. For simplicity, this is a placeholder.
-                // You'd typically use @stripe/react-stripe-js Elements for card input.
-                const paymentMethodId = 'pm_card_visa'; // Placeholder: In real app, get this from Stripe Elements
-
-                const enrollmentResponse = await userService.enrollInCourse(course._id, paymentMethodId);
-                alert('Enrollment successful!');
-                setIsEnrolled(true);
-                setEnrollmentId(enrollmentResponse.enrollment._id);
-            } catch (err) {
-                console.error('Enrollment error:', err);
-                alert('Failed to enroll in course. Please try again.');
+            if (paymentIntent.status !== 'succeeded') {
+            alert('Payment not completed. Please try again.');
+            return;
             }
-        };
+
+            // 3. Notify backend to create enrollment
+            const enrollmentResponse = await userService.confirmEnrollment(course._id, paymentIntent.id);
+
+            alert('Enrollment successful!');
+            setIsEnrolled(true);
+            setEnrollmentId(enrollmentResponse.enrollment._id);
+        } catch (err) {
+            console.error('Enrollment error:', err);
+            alert('Failed to enroll in course. Please try again.');
+        }
+    };
+
 
         if (loading) return <div className="text-center py-16">Loading course details...</div>;
         if (error) return <div className="text-center py-16 text-red-500">{error}</div>;
@@ -116,12 +147,18 @@
                                             Continue Learning
                                         </Link>
                                     ) : (
+                                        <>
+                                        <div className="mb-4">
+                                <           CardElement options={{ hidePostalCode: true }} />
+                                        </div>
+
                                         <button
                                             onClick={handleEnroll}
                                             className="w-full px-6 py-3 bg-green-700 text-white rounded-lg font-bold hover:bg-green-800 transition"
                                         >
                                             Enroll Now
                                         </button>
+                                        </>
                                     )}
                                 </div>
                             </div>
