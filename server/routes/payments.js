@@ -3,9 +3,9 @@ const router = express.Router();
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const Enrollment = require('../models/Enrollment');
 const Course = require('../models/Course');
-const { authenticateUser } = require('../middleware/authMiddleware');
+const { protect } = require('../middleware/authMiddleware');
 
-router.post('/create-payment-intent', authenticateUser, async (req, res) => {
+router.post('/create-payment-intent', protect, async (req, res) => {
   const { courseId } = req.body;
   console.log('Creating payment intent for course:', courseId);
 
@@ -39,7 +39,7 @@ router.post('/create-payment-intent', authenticateUser, async (req, res) => {
   }
 });
 
-router.post('/confirm-enrollment', authenticateUser, async (req, res) => {
+router.post('/confirm-enrollment', protect, async (req, res) => {
   const { courseId, paymentIntentId } = req.body;
 
   try {
