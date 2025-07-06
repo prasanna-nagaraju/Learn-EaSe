@@ -14,7 +14,8 @@
             price: 0,
             category: '',
             thumbnail: '', // Placeholder for URL
-            videos: [{ title: '', url: '' }],
+            isPublished: false,
+            videos: [{ title: '', url: '' ,duration: 0 }], // Initial video field
         });
         const [loading, setLoading] = useState(false);
         const [error, setError] = useState(null);
@@ -23,12 +24,14 @@
         const handleCourseChange = (e) => {
             setCourseData({ ...courseData, [e.target.name]: e.target.value });
         };
-
+        
         const handleVideoChange = (index, e) => {
+            const { name, value } = e.target;
             const newVideos = [...courseData.videos];
-            newVideos[index][e.target.name] = e.target.value;
+            newVideos[index][name] = name === 'duration' ? parseInt(value, 10) || 0 : value;
             setCourseData({ ...courseData, videos: newVideos });
         };
+
 
         const addVideoField = () => {
             setCourseData({ ...courseData, videos: [...courseData.videos, { title: '', url: '' }] });
@@ -53,7 +56,8 @@
                     price: 0,
                     category: '',
                     thumbnail: '',
-                    videos: [{ title: '', url: '' }],
+                    isPublished: false,
+                    videos: [{ title: '', url: '' ,duration: 0}],
                 });
                 // Optionally refresh dashboard data
                 navigate('/instructor'); // Re-navigate to refresh component
@@ -120,6 +124,22 @@
                                                 <label htmlFor={`video-url-${index}`} className="block text-sm font-medium text-gray-700">Video URL (Embed Link)</label>
                                                 <input type="url" id={`video-url-${index}`} name="url" value={video.url} onChange={(e) => handleVideoChange(index, e)} required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500" placeholder="e.g., https://www.youtube.com/embed/dQw4w9WgXcQ" />
                                             </div>
+                                            <div className="flex-grow">
+                                                <label htmlFor={`video-duration-${index}`} className="block text-sm font-medium text-gray-700">
+                                                    Duration (in minutes)
+                                                </label>
+                                                <input
+                                                    type="number"
+                                                    id={`video-duration-${index}`}
+                                                    name="duration"
+                                                    value={video.duration}
+                                                    onChange={(e) => handleVideoChange(index, e)}
+                                                    min="1"
+                                                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                                    required
+                                                />
+                                            </div>
+
                                             {courseData.videos.length > 1 && (
                                                 <button type="button" onClick={() => removeVideoField(index)} className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition">
                                                     <i className="fas fa-trash"></i>
@@ -130,6 +150,21 @@
                                     <button type="button" onClick={addVideoField} className="px-4 py-2 border border-green-700 text-green-700 rounded-md hover:bg-green-50 transition flex items-center">
                                         <i className="fas fa-plus mr-2"></i> Add Another Lesson
                                     </button>
+
+                                    <div className="flex items-center space-x-2">
+                                        <input
+                                            type="checkbox"
+                                            id="isPublished"
+                                            name="isPublished"
+                                            checked={courseData.isPublished}
+                                            onChange={(e) => setCourseData({ ...courseData, isPublished: e.target.checked })}
+                                            className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                                        />
+                                        <label htmlFor="isPublished" className="block text-sm font-medium text-gray-700">
+                                            Publish this course
+                                        </label>
+                                    </div>
+
 
                                     <div className="pt-4">
                                         <button
