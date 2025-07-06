@@ -13,29 +13,34 @@
         const [error, setError] = useState(null);
 
         useEffect(() => {
-            const fetchInstructorData = async () => {
-                if (user && user.role === 'instructor') {
-                    try {
-                        setLoading(true);
-                        const dashboardStats = await userService.getInstructorDashboard();
-                        setStats(dashboardStats);
+        const fetchInstructorData = async () => {
+            if (user && user.role === 'instructor') {
+            try {
+                setLoading(true);
+                console.log("Fetching instructor dashboard...");
+                const dashboardStats = await userService.getInstructorDashboard();
+                console.log("Dashboard stats:", dashboardStats);
 
-                        const coursesData = await courseService.getMyCourses();
-                        setMyCourses(coursesData);
+                const coursesData = await courseService.getMyCourses();
+                console.log("My courses:", coursesData);
 
-                    } catch (err) {
-                        setError('Failed to fetch instructor dashboard data.');
-                        console.error(err);
-                    } finally {
-                        setLoading(false);
-                    }
-                } else {
-                    setLoading(false);
-                    setError('You must be logged in as an instructor to view this dashboard.');
-                }
-            };
-            fetchInstructorData();
+                setStats(dashboardStats);
+                setMyCourses(coursesData);
+            } catch (err) {
+                console.error("Error fetching data:", err);
+                setError('Failed to fetch instructor dashboard data.');
+            } finally {
+                setLoading(false);
+            }
+            } else {
+            console.warn("User not logged in or not instructor");
+            setLoading(false);
+            setError('You must be logged in as an instructor to view this dashboard.');
+            }
+        };
+        fetchInstructorData();
         }, [user]);
+
 
         if (loading) return <div className="text-center py-16">Loading instructor dashboard...</div>;
         if (error) return <div className="text-center py-16 text-red-500">{error}</div>;

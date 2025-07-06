@@ -7,6 +7,7 @@
     // @access  Public
     const getCourses = asyncHandler(async (req, res) => {
         const courses = await Course.find({ isPublished: true }).populate('instructor', 'name email');
+        console.log(courses);
         res.status(200).json(courses);
     });
 
@@ -31,7 +32,7 @@
     // @route   POST /api/courses
     // @access  Private/Instructor
     const createCourse = asyncHandler(async (req, res) => {
-        const { title, description, price, category, thumbnail, videos } = req.body;
+        const { title, description, price, category, thumbnail, videos,isPublished } = req.body;
 
         if (!title || !description || !price || !category || !videos || videos.length === 0) {
             res.status(400);
@@ -46,7 +47,7 @@
             thumbnail,
             videos,
             instructor: req.user._id, // Instructor is the logged-in user
-            isPublished: false, // Courses are unpublished by default
+            isPublished // Courses are unpublished by default
         });
 
         res.status(201).json(course);
@@ -108,6 +109,12 @@
     // @route   GET /api/courses/my-courses
     // @access  Private/Instructor
     const getMyCourses = asyncHandler(async (req, res) => {
+        console.log("req.user from /my-courses:", req.user);
+        if (!req.user || !req.user._id) {
+            res.status(401);
+            throw new Error("User not authenticated");
+        }
+        console.log('User in getMyCourses:', req.user);
         const courses = await Course.find({ instructor: req.user._id }).populate('instructor', 'name email');
         res.status(200).json(courses);
     });
