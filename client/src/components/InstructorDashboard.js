@@ -39,29 +39,21 @@ const InstructorDashboard = () => {
             }
         };
         fetchInstructorData();
-    }, [user]);
-  
-    const handleDeleteCourse = async (courseId) => {
-        if (!window.confirm('Are you sure you want to delete this course? This action cannot be undone.')) {
-            return;
-        }
+        }, [user]);
+
+        const handleDelete = async (courseId) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this course?");
+        if (!confirmDelete) return;
 
         try {
-            await courseService.deleteCourse(courseId);
-            // Remove the deleted course from state
-            setMyCourses(myCourses.filter(course => course._id !== courseId));
-            alert('Course deleted successfully.');
-            if (stats) {
-                setStats({
-                    ...stats,
-                    totalCourses: stats.totalCourses - 1
-                });
-            }
+            await courseService.deleteCourse(courseId);  // Assuming you have this method in your courseService
+            setMyCourses(prev => prev.filter(course => course._id !== courseId));
         } catch (err) {
-            console.error('Error deleting course:', err);
-            alert('Failed to delete course. Please try again.');
+            console.error("Failed to delete course:", err);
+            alert("Failed to delete course.");
         }
     };
+
 
 
     if (loading) return <div className="text-center py-16">Loading instructor dashboard...</div>;
@@ -118,33 +110,33 @@ const InstructorDashboard = () => {
                         </div>
                     </div>
 
-                    <div className="mt-12">
-                        <h3 className="text-2xl font-bold mb-6">My Courses</h3>
-                        {myCourses.length === 0 ? (
-                            <p className="text-center text-gray-600">You haven't created any courses yet. Click "Start Course Creation" to add your first course!</p>
-                        ) : (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {myCourses.map(course => (
-                                    <div key={course._id} className="bg-white rounded-lg shadow-md overflow-hidden">
-                                        <img src={course.thumbnail || "https://placehold.co/400x250"} alt={course.title} className="w-full h-40 object-cover" />
-                                        <div className="p-4">
-                                            <h4 className="font-bold text-lg mb-1">{course.title}</h4>
-                                            <p className="text-sm text-gray-600 mb-2">Status: {course.isPublished ? 'Published' : 'Draft'}</p>
-                                            <p className="text-sm text-gray-600 mb-2">Price: ${course.price}</p>
-                                            <div className="flex justify-between items-center mt-3">
-                                                <Link to={`/instructor/edit-course/${course._id}`} className="text-blue-600 hover:underline text-sm">Edit</Link>
-                                                <button onClick={() => handleDeleteCourse(course._id)} className="text-red-600 hover:underline text-sm">Delete</button>
+                        <div className="mt-12">
+                            <h3 className="text-2xl font-bold mb-6">My Courses</h3>
+                            {myCourses.length === 0 ? (
+                                <p className="text-center text-gray-600">You haven't created any courses yet. Click "Start Course Creation" to add your first course!</p>
+                            ) : (
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    {myCourses.map(course => (
+                                        <div key={course._id} className="bg-white rounded-lg shadow-md overflow-hidden">
+                                            <img src={course.thumbnail || "https://placehold.co/400x250"} alt={course.title} className="w-full h-40 object-cover" />
+                                            <div className="p-4">
+                                                <h4 className="font-bold text-lg mb-1">{course.title}</h4>
+                                                <p className="text-sm text-gray-600 mb-2">Status: {course.isPublished ? 'Published' : 'Draft'}</p>
+                                                <p className="text-sm text-gray-600 mb-2">Price: ${course.price}</p>
+                                                <div className="flex justify-between items-center mt-3">
+                                                    <Link to={`/instructor/edit-course/${course._id}`} className="text-blue-600 hover:underline text-sm">Edit</Link>
+                                                    <button onClick={() => handleDelete(course._id)} className="text-red-600 hover:underline text-sm">Delete</button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
-    );
-};
+            </section>
+        );
+    };
 
 export default InstructorDashboard;
