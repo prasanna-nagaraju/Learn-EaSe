@@ -10,6 +10,7 @@ import CoursePlayer from './components/CoursePlayer';
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import AllCoursesPage from './pages/AllCoursesPage';
+import EditCourse from './pages/EditCourse'; // ✅ Import EditCourse page
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 
@@ -43,6 +44,8 @@ function App() {
                         path="/courses/:courseId/lesson/:lessonId"
                         element={<PrivateRoute component={CoursePlayer} roles={['student']} />}
                     />
+
+                    {/* Instructor Protected Routes */}
                     <Route
                         path="/instructor"
                         element={<PrivateRoute component={InstructorPage} roles={['instructor']} />}
@@ -54,6 +57,10 @@ function App() {
                     <Route
                         path="/instructor/manage-courses"
                         element={<PrivateRoute component={InstructorPage} roles={['instructor']} />}
+                    />
+                    <Route
+                        path="/instructor/edit-course/:courseId" // ✅ Edit course route
+                        element={<PrivateRoute component={EditCourse} roles={['instructor']} />}
                     />
                 </Routes>
             </AuthProvider>
