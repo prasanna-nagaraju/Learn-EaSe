@@ -89,6 +89,8 @@
     // @access  Private/Instructor
     const deleteCourse = asyncHandler(async (req, res) => {
         const course = await Course.findById(req.params.id);
+        console.log("req.user from deleteCourse:", req.user);   
+        res.status(200).json({ message: 'Delete course endpoint hit' });
 
         if (course) {
             // Check if the logged-in user is the instructor of the course or an admin
@@ -97,7 +99,7 @@
                 throw new Error('Not authorized to delete this course');
             }
 
-            await course.remove();
+            await Course.findByIdAndDelete(course._id);
             res.status(200).json({ message: 'Course removed' });
         } else {
             res.status(404);

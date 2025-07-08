@@ -41,6 +41,20 @@
         fetchInstructorData();
         }, [user]);
 
+        const handleDelete = async (courseId) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this course?");
+        if (!confirmDelete) return;
+
+        try {
+            await courseService.deleteCourse(courseId);  // Assuming you have this method in your courseService
+            setMyCourses(prev => prev.filter(course => course._id !== courseId));
+        } catch (err) {
+            console.error("Failed to delete course:", err);
+            alert("Failed to delete course.");
+        }
+    };
+
+
 
         if (loading) return <div className="text-center py-16">Loading instructor dashboard...</div>;
         if (error) return <div className="text-center py-16 text-red-500">{error}</div>;
@@ -114,7 +128,7 @@
                                                 <p className="text-sm text-gray-600 mb-2">Price: ${course.price}</p>
                                                 <div className="flex justify-between items-center mt-3">
                                                     <Link to={`/instructor/edit-course/${course._id}`} className="text-blue-600 hover:underline text-sm">Edit</Link>
-                                                    <button onClick={() => alert(`Delete course: ${course.title}`)} className="text-red-600 hover:underline text-sm">Delete</button>
+                                                    <button onClick={() => handleDelete(course._id)} className="text-red-600 hover:underline text-sm">Delete</button>
                                                 </div>
                                             </div>
                                         </div>
