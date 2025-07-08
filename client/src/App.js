@@ -10,7 +10,7 @@ import CoursePlayer from './components/CoursePlayer';
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import AllCoursesPage from './pages/AllCoursesPage';
-import EditCourse from './pages/EditCourse'; // ✅ Import EditCourse page
+import EditCourse from './pages/EditCourse.js'; // ✅ Import EditCourse page
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 

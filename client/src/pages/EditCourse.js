@@ -38,7 +38,7 @@ const EditCourse = () => {
     try {
       await courseService.updateCourse(courseId, course);
       alert('Course updated successfully!');
-      navigate('/instructor/dashboard'); // Adjust path to your dashboard route
+      navigate('/instructor'); // Adjust path to your dashboard route
     } catch (err) {
       console.error(err);
       alert('Failed to update course.');
