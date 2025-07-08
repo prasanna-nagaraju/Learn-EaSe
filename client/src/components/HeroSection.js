@@ -18,7 +18,7 @@
                         </div>
                     </div>
                     <div className="md:w-1/2">
-                        <img src="https://placehold.co/600x400" alt="Diverse group of students learning online with laptops and tablets in a bright, modern educational environment" className="rounded-lg shadow-xl"></img>
+                        <img src="https://media.licdn.com/dms/image/v2/D4E12AQFICz88a7e4gg/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1676455072644?e=2147483647&v=beta&t=hqVRhewCXhIldiFkm-iUaxWMD3-pB7U3PMQM5Z-2eFA" alt="Diverse group of students learning online with laptops and tablets in a bright, modern educational environment" className="rounded-lg shadow-xl"></img>
                     </div>
                 </div>
             </section>
